@@ -22,10 +22,7 @@ const Hero = () => {
       >
          <div className="container relative z-10 mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center pt-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/80 backdrop-blur-sm mb-6 animate-fade-in">
-              <Sparkles className="w-4 h-4 text-celebration animate-glow" />
-              <span className="text-sm font-medium">Trusted by 10,000+ happy clients</span>
-            </div>
+            
             
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold mb-6 animate-fade-in leading-tight">
               Create Your

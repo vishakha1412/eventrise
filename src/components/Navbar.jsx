@@ -1,70 +1,93 @@
- import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { FiMenu, FiX } from 'react-icons/fi';
+  import { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { FiMenu, FiX } from "react-icons/fi";
 
 const navLinks = [
-  { name: 'Home', path: '/' },
-  { name:'Browse Vendors', path: '/browse' },
-  { name: 'Services', path: '/services' },
-  { name: 'Contact', path: '/contact' },
+  { name: "Home", path: "/" },
+   
+   {name:"Register",path:"/register"},
+    { name: "Browse", path: "/browse" },
+  { name: "About", path: "/about" },
+  { name: "Services", path: "/services" },
+  { name: "Contact", path: "/contact" },
+  { name: "Browse", path: "/browse" },
+  {name:"feedack",path:"/feedack"},
+   {name:"pastevent",path:"/pastevent"},
+   
 ];
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+ const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   return (
-    <header className="fixed top-0 w-full z-50">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="bg-purple-900 text-white shadow-lg"
-      >
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          {/* Logo */}
-          <div className="text-2xl font-bold tracking-wide">EventConnect</div>
-
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex space-x-6">
-            {navLinks.map((link, index) => (
-              <motion.a
-                key={index}
-                href={link.path}
-                whileHover={{ scale: 1.1 }}
-                className="relative font-medium transition duration-300 hover:text-yellow-300"
-              >
-                {link.name}
-                <span className="absolute left-0 -bottom-1 w-full h-0.5 bg-yellow-300 scale-x-0 hover:scale-x-100 origin-left transition-transform" />
-              </motion.a>
-            ))}
-          </nav>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden text-2xl cursor-pointer" onClick={toggleMenu}>
-            {isOpen ? <FiX /> : <FiMenu />}
-          </div>
-        </div>
-{/* Mobile Menu */}
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            transition={{ duration: 0.4 }}
-            className="md:hidden bg-gradient-to-br from-indigo-700 to-purple-800 px-6 py-4 space-y-4"
+    <nav className="bg-purple-800 text-white px-6 py-4 shadow-md fixed w-full z-50">
+      <div className="flex justify-between items-center">
+        <Link to="/" className="text-2xl font-bold tracking-wide">
+          EventConnect
+        </Link>
+ 
+        <div className="hidden md:flex gap-6 items-center">
+          {navLinks.slice(0, 3).map((link) => (
+            <NavLink
+              key={link.name}
+              to={link.path}
+              className={({ isActive }) =>
+                `transition duration-300 hover:text-purple-300 ${
+                  isActive ? "underline text-purple-300" : ""
+                }`
+              }
+            >
+              {link.name}
+            </NavLink>
+ ))}
+          <button
+            onClick={toggleSidebar}
+            className="bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded transition duration-300"
           >
-            {navLinks.map((link, index) => (
-              <a
-                key={index}
-                href={link.path}
-                className="block text-lg font-medium text-white hover:text-yellow-300 transition"
-              >
-                {link.name}
-              </a>
-            ))}
-          </motion.div>
-        )}
-      </motion.div>
-    </header>
+            More
+          </button>
+        </div>
+
+        {/* Mobile Menu Icon */}
+        <button
+          onClick={toggleSidebar}
+          className="md:hidden text-2xl focus:outline-none"
+        >
+          {sidebarOpen ? <FiX /> : <FiMenu />}
+        </button>
+      </div>
+
+      {/* Sidebar */}
+      <div
+        className={`fixed top-0 right-0 h-full w-64 bg-purple-900 text-white transform transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? "translate-x-0" : "translate-x-full"
+        } shadow-lg z-40`}
+      >
+        <div className="flex justify-between items-center px-6 py-4 border-b border-purple-700">
+          <h2 className="text-xl font-semibold">More Links</h2>
+          <button onClick={toggleSidebar} className="text-2xl">
+            <FiX />
+ </button>
+        </div>
+        <ul className="flex flex-col gap-4 px-6 py-6">
+          {navLinks.slice(3).map((link) => (
+            <NavLink
+              key={link.name}
+              to={link.path}
+              onClick={() => setSidebarOpen(false)}
+              className={({ isActive }) =>
+                `transition duration-300 hover:text-purple-300 ${
+                  isActive ? "underline text-purple-300" : ""
+                }`
+              }
+            >
+              {link.name}
+            </NavLink>
+          ))}
+        </ul>
+      </div>
+    </nav>
   );
 }
+
