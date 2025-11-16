@@ -1,24 +1,69 @@
-  import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+ import { useState, useEffect } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
+import axios from "axios";
 
 const navLinks = [
   { name: "Home", path: "/" },
-   
-   {name:"Register",path:"/register"},
-    { name: "Browse", path: "/browse" },
-  { name: "About", path: "/about" },
-  { name: "Services", path: "/services" },
-  { name: "Contact", path: "/contact" },
   { name: "Browse", path: "/browse" },
-  {name:"feedack",path:"/feedack"},
-   {name:"pastevent",path:"/pastevent"},
-   
+  { name: "About", path: "/about" },
+  { name: "Contact", path: "/contact" },
+  { name: "Feedback", path: "/feedback" },
+  { name: "Past Events", path: "/pastevent" },
 ];
 
 export default function Navbar() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
- const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const [token, setToken] = useState(null);
+  const [role, setRole] = useState(null);
+ // ✅ Cookie reader
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  };
+
+  // ✅ Sync token and role on mount
+  useEffect(() => {
+     const localToken = localStorage.getItem("token");
+setToken(localToken);
+   
+    const localRole = localStorage.getItem("role");
+    
+    setRole(localRole);
+  }, []);
+
+  // ✅ Sync across tabs
+ useEffect(() => {
+  const cookieToken = getCookie("token");
+  const localRole = localStorage.getItem("role");
+  
+  console.log("Role:", localRole);
+  setToken(cookieToken);
+  setRole(localRole);
+});
+
+
+  // ✅ Logout handler
+  const handleLogout = () => {
+    axios
+      .get("http://localhost:5000/api/auth/organiser/logout", {
+        withCredentials: true,
+      })
+      .then(() => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        setToken(null);
+        setRole(null);
+        alert("Logout successful");
+        navigate("/");
+      })
+      .catch((err) => {
+        console.error("Logout error:", err);
+      });
+  };
+const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   return (
     <nav className="bg-purple-800 text-white px-6 py-4 shadow-md fixed w-full z-50">
@@ -26,7 +71,8 @@ export default function Navbar() {
         <Link to="/" className="text-2xl font-bold tracking-wide">
           EventConnect
         </Link>
- 
+
+        {/* Desktop Nav */}
         <div className="hidden md:flex gap-6 items-center">
           {navLinks.slice(0, 3).map((link) => (
             <NavLink
@@ -40,12 +86,12 @@ export default function Navbar() {
             >
               {link.name}
             </NavLink>
- ))}
+          ))}
           <button
             onClick={toggleSidebar}
             className="bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded transition duration-300"
           >
-            More
+  More
           </button>
         </div>
 
@@ -68,9 +114,21 @@ export default function Navbar() {
           <h2 className="text-xl font-semibold">More Links</h2>
           <button onClick={toggleSidebar} className="text-2xl">
             <FiX />
- </button>
+          </button>
         </div>
-        <ul className="flex flex-col gap-4 px-6 py-6">
+ <ul className="flex flex-col gap-4 px-6 py-6">
+          {/* ✅ Role-based Dashboard */}
+          {token && (
+            <NavLink
+              to={role === "organiser" ? "/dashboard/host" : "/dashboard/customer"}
+              className="hover:underline font-semibold"
+              onClick={() => setSidebarOpen(false)}
+            >
+              Dashboard
+            </NavLink>
+          )}
+
+          {/* Remaining Nav Links */}
           {navLinks.slice(3).map((link) => (
             <NavLink
               key={link.name}
@@ -85,9 +143,27 @@ export default function Navbar() {
               {link.name}
             </NavLink>
           ))}
+          {/* ✅ Auth Buttons */}
+          {token ? (
+            <button
+              onClick={handleLogout}
+              className="hover:underline font-semibold text-left"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              to="/register"
+              onClick={() => setSidebarOpen(false)}
+              className="hover:underline font-semibold"
+            >
+              Register
+            </Link>
+          )}
         </ul>
       </div>
     </nav>
   );
 }
+
 

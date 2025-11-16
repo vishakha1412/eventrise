@@ -1,6 +1,7 @@
  import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 export default function RegisterHost() {
   const navigate = useNavigate();
@@ -11,58 +12,29 @@ export default function RegisterHost() {
     password: "",
     phone: "",
     address: "",
-    services: "",
-    pricing: "",
-    description: "",
-    photos: [],
+     
   });
   
 const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handlePhotoUpload = (e) => {
-    const files = Array.from(e.target.files);
-    setForm((prev) => ({
-      ...prev,
-      photos: [...prev.photos, ...files],
-    }));
-  };
-
-  const handleSubmit = async (e) => {
+  
+//name,businessName,phone,address,email,password
+  const handleSubmit = async(e) => {
     e.preventDefault();
+  const response=await axios.post("http://localhost:5000/api/auth/organiser/register",{
+   name:form.name,
+   email:form.email,
+   password:form.password,
+   businessName:form.businessName,
+   phone:form.phone,
+   address:form.address
 
-    const formData = new FormData();
-    Object.entries(form).forEach(([key, value]) => {
-      if (key === "photos") {
-        value.forEach((file, index) => {
-          formData.append(`photos[${index}]`, file);
-        });
-      } else {
-        formData.append(key, value);
-      }
-    });
+  },{withCredentials:true}
+
+)   
+  console.log(response.data);
     navigate("/dashboard/host");
-
-/* try {
-      // Replace with your actual API endpoint
-      const response = await fetch("https://your-api.com/api/hosts/register", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        // Optional: handle response data
-        const data = await response.json();
-        console.log("Host registered:", data);
-        navigate("/dashboard/host");
-      } else {
-        console.error("Registration failed");
-        
-        
-      }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }*/
   };
 
 return (
@@ -104,49 +76,7 @@ return (
           </div>
         ))}
 
-        {/* Business Details */}
-        {[
-          { name: "services", label: "Services Offered" },
-          { name: "pricing", label: "Pricing Details" },
-          { name: "description", label: "Business Description" },
-        ].map(({ name, label }) => (
-          <div key={name}>
-            <label className="block text-sm font-medium text-purple-600">{label}</label>
-            <textarea
-              name={name}
-              value={form[name]}
-              onChange={handleChange}
-              required
-              rows={3}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-          </div>
-        ))}
-{/* Photo Upload */}
-        <div>
-          <label className="block text-sm font-medium text-purple-600">
-            Upload Event Photos (multiple)
-          </label>
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={handlePhotoUpload}
-            className="w-full px-4 py-2 border rounded"
-          />
-          {form.photos.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-              {form.photos.map((file, index) => (
-                <img
-                  key={index}
-                  src={URL.createObjectURL(file)}
-                  alt={`Event ${index + 1}`}
-                  className="w-full h-32 object-cover rounded shadow"
-                />
-              ))}
-            </div>
-          )}
-        </div>
+      
 
 {/* Submit */}
         <button

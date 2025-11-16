@@ -40,11 +40,7 @@ const Hero = () => {
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>
-              <Link to="/dashboard">
-                <button size="lg" variant="outline" className="bg-white/80 backdrop-blur-sm border-2 hover:bg-white px-8 text-purple-700 font-semibold transition-all rounded-3xl p-y-3 flex items-center justify-center">
-                  Plan Your Event
-                </button>
-              </Link>
+              
             </div>
           </div>
         </div>

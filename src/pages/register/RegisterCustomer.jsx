@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import axios from 'axios'
 
 export default function RegisterCustomer() {
   const navigate = useNavigate();
@@ -9,10 +10,24 @@ export default function RegisterCustomer() {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // Save customer data logic here
+    try{
+  const response=await axios.post("http://localhost:5000/api/auth/user/register",{
+   fullName:form.name,
+   email:form.email,
+   password:form.password
+  },{withCredentials:true}
+
+)   
+ 
+  console.log(response.data);
     navigate("/dashboard/customer");
+  }catch(e){
+    console.log(e)
+    alert(e)
+  }
+
   };
 return (
     <motion.div

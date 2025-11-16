@@ -11,6 +11,15 @@ import HostDashboard from "./pages/dashboard/HostDashboard";
 import Login from "./pages/register/LoginPage";
 import About from "./pages/AboutPage";
  
+import { Logout } from "./pages/register/Logout";
+import { BrowsePage } from "./pages/browse/BrowsePage";
+import LoginCustomer from "./pages/register/LoginCustomer";
+import LoginHost from "./pages/register/LoginHost";
+import { CreateEvent } from "./pages/dashboard/CreateEvent.jsx";
+import { BusinessProfile } from "./pages/dashboard/Profile.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import UnderDevelopment from "./components/under-development.jsx";
+ 
  
 
 function App() {
@@ -24,16 +33,29 @@ function App() {
           <Route index element={<LandingPage/>} />
           <Route path="/about" element={<About/>} />
           <Route path="/services" element={<div className="bg-red-700">Services</div>} />
-          <Route path="/contact" element={<div>Contact</div>} />
           <Route path="/login" element={<Login/>}/>
-          <Route path="/browse" element={<div className="bg-green-700">Browse Vendors</div>} />
-          <Route path="*" element={<div>404 Not Found</div>} />
+          <Route path="/browse" element= {<BrowsePage/>}/>
+          <Route path="*" element={<UnderDevelopment/>} />
           <Route path="/register" element={<RegisterRole />} />
          <Route path="/register/customer" element={<RegisterCustomer />} />
-         <Route path="/register/host" element={<RegisterHost />} />
-         <Route path="/dashboard/customer" element={<CustomerDashboard />} > </Route>
-         <Route path="/dashboard/host" element={<HostDashboard />} />
+         <Route path="/register/host" element={ 
+           
+              <RegisterHost />
+           } />
+         <Route path="/dashboard/customer" element={ <ProtectedRoute allowedRole='customer'><CustomerDashboard /></ProtectedRoute>} > </Route>
 
+         <Route path="/dashboard/host" element={<ProtectedRoute allowedRole ='organiser'>
+            <HostDashboard />
+          </ProtectedRoute>} />
+
+          <Route path='/register/login/user' element={<LoginCustomer/>}/>
+          <Route path='/register/login/host' element={<LoginHost/>}/>
+          <Route path='/create-event' element={<CreateEvent/>}/>
+          <Route path='/organiser/:id' element={<BusinessProfile/>}/>
+          <Route path='/dashboard/host/profile' element={<BusinessProfile/>}/>
+          <Route path='/under-development' element={<UnderDevelopment/>}/>
+          <Route path='/dashboard/customer/browse' element={<BrowsePage/>}/>
+          <Route path='/logout' element={<Logout/>}/>
         </Route>
       </Routes>
 

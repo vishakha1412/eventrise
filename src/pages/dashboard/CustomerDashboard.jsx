@@ -1,6 +1,9 @@
- import { useNavigate, Outlet } from "react-router-dom";
+  import { useNavigate, Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaSearch, FaHeart, FaCalendarAlt, FaUserCog } from "react-icons/fa";
+
+// ✅ Define valid routes
+const validRoutes = ["browse", "/favorites", "/bookings", "/profile"];
 
 export default function CustomerDashboard() {
   const navigate = useNavigate();
@@ -24,16 +27,31 @@ export default function CustomerDashboard() {
       route: "bookings",
       description: "Track and manage your event bookings.",
     },
- {
-      label: "Profile Settings",
+    {
+ label: "Profile Settings",
       icon: <FaUserCog className="text-3xl text-purple-600" />,
       route: "profile",
       description: "Update your preferences and contact info.",
     },
   ];
 
+  const handleNavigation = (route) => {
+    if (validRoutes.includes(route)) {
+      navigate(route);
+    } else {
+      navigate("/under-development");
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-purple-200 px-4 py-10"   style={{backgroundImage: "url('/assets/main-bg.jpg')" , backgroundSize: 'cover', backgroundPosition: 'center'}} >
+    <div
+      className="min-h-screen bg-gradient-to-br from-purple-50 to-purple-200 px-4 py-10"
+      style={{
+        backgroundImage: "url('/assets/main-bg.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <motion.h1
         className="text-4xl font-bold text-purple-800 text-center mb-4"
         initial={{ y: -20, opacity: 0 }}
@@ -41,8 +59,9 @@ export default function CustomerDashboard() {
         transition={{ duration: 0.6 }}
       >
         Welcome to EventConnect 🎉
-      </motion.h1>
- <motion.p
+  </motion.h1>
+
+      <motion.p
         className="text-lg text-purple-700 text-center mb-10 max-w-2xl mx-auto"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -61,16 +80,16 @@ export default function CustomerDashboard() {
         {cards.map(({ label, icon, route, description }) => (
           <motion.div
             key={label}
-            onClick={() => navigate(route)}
+            onClick={() => handleNavigation(route)}
             className="bg-white rounded-xl shadow-md p-6 text-center cursor-pointer hover:shadow-xl transition duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
-            <div className="mb-4">{icon}</div>
+ <div className="mb-4">{icon}</div>
             <h2 className="text-xl font-semibold text-purple-700">{label}</h2>
             <p className="text-sm text-purple-600 mt-2">{description}</p>
           </motion.div>
- ))}
+        ))}
       </motion.div>
 
       <div className="mt-12">
@@ -79,4 +98,3 @@ export default function CustomerDashboard() {
     </div>
   );
 }
-
