@@ -19,6 +19,7 @@ import { CreateEvent } from "./pages/dashboard/CreateEvent.jsx";
 import { BusinessProfile } from "./pages/dashboard/Profile.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import UnderDevelopment from "./components/under-development.jsx";
+import { OrganiserDashboard } from "./pages/dashboard/personalProfile.jsx";
  
  
 
@@ -47,12 +48,13 @@ function App() {
          <Route path="/dashboard/host" element={<ProtectedRoute allowedRole ='organiser'>
             <HostDashboard />
           </ProtectedRoute>} />
+ 
 
           <Route path='/register/login/user' element={<LoginCustomer/>}/>
           <Route path='/register/login/host' element={<LoginHost/>}/>
           <Route path='/create-event' element={<CreateEvent/>}/>
           <Route path='/organiser/:id' element={<BusinessProfile/>}/>
-          <Route path='/dashboard/host/profile' element={<BusinessProfile/>}/>
+          <Route path='/dashboard/host/profile' element={<OrganiserDashboard/>}/>
           <Route path='/under-development' element={<UnderDevelopment/>}/>
           <Route path='/dashboard/customer/browse' element={<BrowsePage/>}/>
           <Route path='/logout' element={<Logout/>}/>

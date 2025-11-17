@@ -7,7 +7,7 @@ const navLinks = [
   { name: "Home", path: "/" },
   { name: "Browse", path: "/browse" },
   { name: "About", path: "/about" },
-  { name: "Contact", path: "/contact" },
+  { name: "Browse", path: "/browse" },
   { name: "Feedback", path: "/feedback" },
   { name: "Past Events", path: "/pastevent" },
 ];
@@ -32,8 +32,7 @@ setToken(localToken);
     const localRole = localStorage.getItem("role");
     
     setRole(localRole);
-  }, []);
-
+  },[])
   // ✅ Sync across tabs
  useEffect(() => {
   const cookieToken = getCookie("token");

@@ -25,11 +25,10 @@ const [error, setError] = useState("");
 
 ).then((response) => {
   localStorage.setItem("role", response.data.role);
-  localStorage.setItem("userId", response.data.user._id);
-
+  
  
   navigate("/dashboard/host");
-  console.log(response.data);
+ 
    //navigate("/create-event");
   
   
