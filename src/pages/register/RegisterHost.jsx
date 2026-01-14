@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
+import {toast} from 'react-toastify';
 
 export default function RegisterHost() {
   const navigate = useNavigate();
@@ -21,7 +22,9 @@ const handleChange = (e) =>
   
 //name,businessName,phone,address,email,password
   const handleSubmit = async(e) => {
+
     e.preventDefault();
+    try{
   const response=await axios.post("http://localhost:5000/api/auth/organiser/register",{
    name:form.name,
    email:form.email,
@@ -33,8 +36,22 @@ const handleChange = (e) =>
   },{withCredentials:true}
 
 )   
+toast.success("Registration successful! Please verify your email before logging in.",{
+      position: "top-center",
+      autoClose: 3000,
+      theme: "colored",
+    })
   console.log(response.data);
-    navigate("/dashboard/host");
+    navigate("/dashboard/host");}
+    catch(e){
+      const error=e.response.data.error || e.response.data.message;
+      console.log(error)
+        toast.error(error,{
+      position: "top-center",
+      autoClose: 3000,
+      theme: "colored",
+    })
+    }
   };
 
 return (

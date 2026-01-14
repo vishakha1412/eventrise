@@ -37,7 +37,7 @@ export const BrowsePage = () => {
   const observerRef = useRef(null);
   const mountedRef = useRef(false);
 
-  // simple debounce
+  
   const debounce = (fn, delay = 300) => {
     let t;
     return (...args) => {
@@ -46,7 +46,7 @@ export const BrowsePage = () => {
     };
   };
 
-  // ---------- fetch events (same API & token logic) ----------
+  
   useEffect(() => {
     mountedRef.current = true;
     const getCookie = (name) => {
@@ -70,6 +70,7 @@ export const BrowsePage = () => {
       .then((res) => {
         if (!mountedRef.current) return;
         const ev = Array.isArray(res.data.events) ? res.data.events : [];
+        
         setAllEvents(ev);
         setFilteredEvents(ev);
         pageRef.current = 1;
@@ -92,7 +93,7 @@ export const BrowsePage = () => {
         console.error("BrowsePage: fetch error", err);
         if (!mountedRef.current) return;
         setError("Failed to load events.");
-        // preserve original behavior: redirect to /register on error
+        
         navigate("/register");
       })
       .finally(() => {
@@ -107,8 +108,7 @@ export const BrowsePage = () => {
       }
     };
   }, [navigate]);
-
-  // ---------- filter & search ----------
+ 
   const applyFilters = useCallback(() => {
     let list = [...allEvents];
 
@@ -171,7 +171,7 @@ export const BrowsePage = () => {
     }, 350);
   }, [isLoadingMore, visibleEvents.length, filteredEvents]);
 
-  // ---------- intersection observer ----------
+  
   useEffect(() => {
     if (!sentinelRef.current) return;
 
@@ -353,8 +353,8 @@ export const BrowsePage = () => {
             event.price && Number(event.price) > 0 ? `₹${event.price}` : "Free";
           const category = event.category || "General";
           const location = event.location || "Online";
-          const date = formatDate(event.date);
-          const capacity = event.capacity || "—";
+          const date = formatDate(event.date) || "TBA";
+          const capacity = event.capacity || "As per venue";
           const evTags = Array.isArray(event.tags) ? event.tags : [];
 
           return (

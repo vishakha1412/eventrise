@@ -1,4 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom"
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Navbar from "./components/Navbar"
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainLayout from "./pages/MainLayout";
@@ -20,7 +22,10 @@ import { BusinessProfile } from "./pages/dashboard/Profile.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import UnderDevelopment from "./components/under-development.jsx";
 import { OrganiserDashboard } from "./pages/dashboard/personalProfile.jsx";
- 
+import { FeedbackForm } from "./components/FeedbackForm.jsx";
+import OrganizerFeedbackDashboard from "./pages/dashboard/OrganizerFeedbackDashboard.jsx";
+import { ForgotPassword } from "./pages/register/ForgotUserPassword.jsx";
+import { ForgotOrganiserPassword } from "./pages/register/ForgotOrganiserPassword.jsx";
  
 
 function App() {
@@ -35,6 +40,8 @@ function App() {
           <Route path="/about" element={<About/>} />
           <Route path="/services" element={<div className="bg-red-700">Services</div>} />
           <Route path="/login" element={<Login/>}/>
+          <Route path="/forgot-password" element={<ForgotPassword/>}/>
+          <Route path='/forgot-organiser-password' element={<ForgotOrganiserPassword/>}/>
           <Route path="/browse" element= {<BrowsePage/>}/>
           <Route path="*" element={<UnderDevelopment/>} />
           <Route path="/register" element={<RegisterRole />} />
@@ -48,8 +55,8 @@ function App() {
          <Route path="/dashboard/host" element={<ProtectedRoute allowedRole ='organiser'>
             <HostDashboard />
           </ProtectedRoute>} />
- 
-
+          <Route path="/feedback" element={<FeedbackForm/>}/>
+          <Route path="/host/requests" element={<OrganizerFeedbackDashboard/>}/>
           <Route path='/register/login/user' element={<LoginCustomer/>}/>
           <Route path='/register/login/host' element={<LoginHost/>}/>
           <Route path='/create-event' element={<CreateEvent/>}/>
@@ -60,7 +67,7 @@ function App() {
           <Route path='/logout' element={<Logout/>}/>
         </Route>
       </Routes>
-
+      <ToastContainer position="top-center" autoClose={3000}  />
      </>
   )
 }

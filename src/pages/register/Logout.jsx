@@ -18,7 +18,7 @@ export const Logout = () => {
       })
       .then(() => {
         localStorage.removeItem("token");
-        navigate("/login");
+        
       })
       .catch((err) => {
         console.error("Logout failed:", err);

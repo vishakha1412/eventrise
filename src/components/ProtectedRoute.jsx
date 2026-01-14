@@ -9,7 +9,7 @@ export default function ProtectedRoute({ children, allowedRole }) {
     if (parts.length === 2) return parts.pop().split(";").shift();
   };
 
-  const cookieToken = getCookie("token"); // ✅ now accessible
+  const cookieToken = getCookie("token");  
 
   
   if (!cookieToken || role !== allowedRole) {

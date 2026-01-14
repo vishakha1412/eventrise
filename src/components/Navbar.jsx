@@ -10,6 +10,7 @@ const navLinks = [
   { name: "Browse", path: "/browse" },
   { name: "Feedback", path: "/feedback" },
   { name: "Past Events", path: "/pastevent" },
+   { name: "About", path: "/about" },
 ];
 
 export default function Navbar() {
@@ -68,7 +69,7 @@ const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
     <nav className="bg-purple-800 text-white px-6 py-4 shadow-md fixed w-full z-50">
       <div className="flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold tracking-wide">
-          EventConnect
+          𝓔𝓿𝓮𝓷𝓽𝓒𝓸𝓷𝓷𝓮𝓬𝓽
         </Link>
 
         {/* Desktop Nav */}

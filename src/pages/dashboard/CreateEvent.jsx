@@ -47,12 +47,12 @@ const handleSubmit = async (e) => {
     >
       <motion.form
         onSubmit={handleSubmit}
-        className="w-full max-w-xl bg-gray p-8 rounded-xl shadow-lg backdrop-blur-md"
+        className="w-full max-w-xl bg-gray p-8 rounded-xl shadow-lg backdrop-blur-md bg-purple-800/30"
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6 }}
      >
- <h2 className="text-3xl font-semibold text-yellow-300 mb-6 text-center">
+ <h2 className="text-4xl font-semibold  font-sans   text-white  mb-6 text-center">
           Create New Event
         </h2>
 

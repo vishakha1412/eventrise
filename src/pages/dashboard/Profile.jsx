@@ -37,7 +37,7 @@ export const BusinessProfile = () => {
       >
         {/* Logo */}
         <div className="w-24 h-24 rounded-full bg-white shadow-lg flex items-center justify-center text-2xl font-bold text-purple-600 border-2 border-purple-300">
-          LOGO
+          {profile?.businessName?.charAt(0)}
         </div>
 
         {/* Basic Info */}
@@ -66,7 +66,7 @@ export const BusinessProfile = () => {
       >
         <div className="bg-[#1e1b29] text-white p-4 rounded-xl shadow-lg border border-purple-500/40 hover:scale-105 transition">
           <h2 className="text-lg font-semibold text-purple-300">Total Events</h2>
-          <p className="text-3xl font-bold mt-1">{profile?.totalEvents}</p>
+          <p className="text-3xl font-bold mt-1">{profile?.event.length}</p>
         </div>
 
         <div className="bg-[#1e1b29] text-white p-4 rounded-xl shadow-lg border border-purple-500/40 hover:scale-105 transition">

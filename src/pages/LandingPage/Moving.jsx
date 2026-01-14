@@ -6,7 +6,7 @@ const past = [
   '/events/img3.jpg',
   '/events/img4.jpg',
   '/events/img5.jpg',
-]; // Replace with your actual image paths
+];  
 
 const Moving = () => {
   const [px, setPx] = useState(0);

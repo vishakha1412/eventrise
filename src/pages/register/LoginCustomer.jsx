@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
+import {toast} from 'react-toastify';
 
 export default function LoginCustomer() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    email: "host@example.com", // testing data
-    password: "demo1234",       // testing data
+   
   });
 const [error, setError] = useState("");
 
@@ -20,18 +20,28 @@ const [error, setError] = useState("");
   const response=await axios.post("http://localhost:5000/api/auth/user/login",{
    email:form.email,
    password:form.password,
-   role:'customer'
+    
   },{withCredentials:true}
 
 )
  localStorage.setItem("role", response.data.role);
+  toast.success("Registration successful! Please verify your email before logging in.",{
+      position: "top-center",
+      autoClose: 3000,
+      theme: "colored",
+    })
 
-
-  console.log(response.data);
+ 
     navigate("/dashboard/customer");
   }catch(e){
-    console.log(e)
-    alert(e)
+      const error=e.response.data.error || e.response.data.message;
+    console.log(error)
+     toast.error(error,{
+          position: "top-center",
+          autoClose: 3000,
+          theme: "colored",
+        })
+     
   }
 
   };
@@ -81,6 +91,13 @@ const [error, setError] = useState("");
           className="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700 transition"
         >
           Login
+        </button>
+         <button
+          type="button"
+          onClick={() => navigate("/forgot-password")}
+          className="w-full mt-2  text-purple-700  rounded hover:bg-gray-300 transition"
+        >
+          Forgot Password?
         </button>
       </form>
     </motion.div>

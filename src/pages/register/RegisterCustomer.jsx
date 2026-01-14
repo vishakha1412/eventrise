@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import axios from 'axios'
+import {toast} from 'react-toastify';
 
 export default function RegisterCustomer() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export default function RegisterCustomer() {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+    
     try{
   const response=await axios.post("http://localhost:5000/api/auth/user/register",{
    fullName:form.name,
@@ -24,8 +26,13 @@ export default function RegisterCustomer() {
   console.log(response.data);
     navigate("/dashboard/customer");
   }catch(e){
-    console.log(e)
-    alert(e)
+    const error=e.response.data.error || e.response.data.message;
+    console.log(error)
+    toast.error(error,{
+      position: "top-center",
+      autoClose: 3000,
+      theme: "colored",
+    })
   }
 
   };
