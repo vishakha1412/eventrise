@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { CLIENT_URL } from "../../config";
+import { SERVER_URL } from "../../config";
 
 export default function LoginHost() {
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ export default function LoginHost() {
 
     await axios
       .post(
-        `${CLIENT_URL}/api/auth/organiser/login`,
+        `${SERVER_URL}/api/auth/organiser/login`,
         {
           email: form.email,
           password: form.password,

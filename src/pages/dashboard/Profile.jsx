@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { CLIENT_URL } from "../../config";
+import { SERVER_URL } from "../../config";
 
 export const BusinessProfile = () => {
   const { id } = useParams();
@@ -12,7 +12,7 @@ export const BusinessProfile = () => {
 
   useEffect(() => {
     axios
-      .get(`${CLIENT_URL}/api/organiser/${id}`, { withCredentials: true })
+      .get(`${SERVER_URL}/api/organiser/${id}`, { withCredentials: true })
       .then((response) => {
         setProfile(response.data.eventOrganiser);
         setEvents(response.data.eventOrganiser.event);

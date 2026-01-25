@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import axios from 'axios'
 import {toast} from 'react-toastify';
-import { CLIENT_URL } from "../../config";
+import { SERVER_URL } from "../../config";
 
 export default function RegisterCustomer() {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export default function RegisterCustomer() {
     e.preventDefault();
     
     try{
-  const response=await axios.post(`${CLIENT_URL}/api/auth/user/register`,{
+  const response=await axios.post(`${SERVER_URL}/api/auth/user/register`,{
    fullName:form.name,
    email:form.email,
    password:form.password

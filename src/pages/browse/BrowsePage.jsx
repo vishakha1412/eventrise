@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { CLIENT_URL } from "../../config";
+import { SERVER_URL } from "../../config";
 
  
 
@@ -67,7 +67,7 @@ export const BrowsePage = () => {
     setError(null);
 
     axios
-      .get(`${CLIENT_URL}/api/event/`, { withCredentials: true })
+      .get(`${SERVER_URL}/api/event/`, { withCredentials: true })
       .then((res) => {
         if (!mountedRef.current) return;
         const ev = Array.isArray(res.data.events) ? res.data.events : [];

@@ -4,7 +4,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import zxcvbn from 'zxcvbn';
 import { useNavigate } from 'react-router-dom';
-import { CLIENT_URL } from '../../config';
+import { SERVER_URL } from '../../config';
 
 export const ForgotPassword = () => {
   const [step, setStep] = useState(1);
@@ -27,7 +27,7 @@ export const ForgotPassword = () => {
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
 try {
-      await axios.post(`${CLIENT_URL}/api/auth/user/request-password-reset`, { email });
+      await axios.post(`${SERVER_URL}/api/auth/user/request-password-reset`, { email });
       
       toast.success('OTP sent to your email');
       setStep(2);
@@ -46,7 +46,7 @@ try {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${CLIENT_URL}/api/auth/user/reset-password`, { email, otp, newPassword });
+      await axios.post(`${SERVER_URL}/api/auth/user/reset-password`, { email, otp, newPassword });
       toast.success('Password reset successful');
       setStep(1);
       setEmail('');
