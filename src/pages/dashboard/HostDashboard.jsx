@@ -9,7 +9,7 @@ export default function HostDashboard() {
     { label: "Upload Event Photos", icon: "🖼️", link: "/host/photos" },
     { label: "Manage Services", icon: "🛠️", link: "/host/services" },
     { label: "Pricing & Packages", icon: "💰", link: "/host/pricing" },
-    { label: "Customer Requests", icon: "📩", link: "/host/requests" },
+    { label: "Customer Requests", icon: "📩", link: "/under" },
     { label: "Reviews & Ratings", icon: "⭐", link: "/host/reviews" },
     { label: "Create Event", icon: "🎉", link: "/create-event" },
   ];

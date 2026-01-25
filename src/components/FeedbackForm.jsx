@@ -24,7 +24,7 @@ export const FeedbackForm = () => {
           setMessage(data.message || "Failed to fetch feedback");
         }
       } catch (error) {
-        setMessage("Error fetching feedback");
+        setMessage("Error fetching feedback",error);
       } finally {
         setLoading(false);
  }
@@ -44,7 +44,8 @@ export const FeedbackForm = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      const result = await res.json();
+        const result = await res.json();
+        
       setMessage(result.message);
 
       // Reset form
@@ -52,10 +53,11 @@ export const FeedbackForm = () => {
 
       // Refresh feedback list after submission
       const updatedRes = await fetch("http://localhost:5000/api/feedback/all");
-      const updatedData = await updatedRes.json();
+        const updatedData = await updatedRes.json();
+         
       if (updatedRes.ok) setFeedbacks(updatedData);
     } catch (error) {
-      setMessage("Error submitting feedback. Try again!");
+      setMessage("Error submitting feedback. Try again!",error);
     }
   };
  return (
@@ -139,12 +141,12 @@ export const FeedbackForm = () => {
         )}
       </motion.div>
 
-      {/* Feedback List */}
+      
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="bg-white shadow-xl rounded-xl p-6 w-full max-w-3xl"
+        className="shadow-2xl rounded-xl p-6 w-full  "
       >
         <h3 className="text-xl font-bold text-purple-700 mb-4 text-center">
           All Feedback
@@ -155,14 +157,14 @@ export const FeedbackForm = () => {
         ) : feedbacks.length === 0 ? (
           <p className="text-center text-gray-600">No feedback submitted yet.</p>
         ) : (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-4 gap-6">
       {feedbacks.map((fb, index) => (
         <motion.div
           key={index}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: index * 0.05 }}
-          className="bg-white border border-purple-200 rounded-xl shadow-lg hover:shadow-xl p-6 flex flex-col"
+          className="bg-white border border-purple-200 rounded-xl shadow-lg hover:shadow-xl p-3 flex flex-col"
         >
           <div className="flex items-center justify-between mb-3">
             <span className="text-purple-700 font-bold">{fb.role}</span>
