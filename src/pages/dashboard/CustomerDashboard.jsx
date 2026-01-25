@@ -1,7 +1,7 @@
   import { useNavigate, Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaSearch, FaHeart, FaCalendarAlt, FaUserCog } from "react-icons/fa";
-import { CLIENT_URL } from "../../config";
+
 // ✅ Define valid routes
 const validRoutes = ["browse", "/favorites", "/bookings", "/profile"];
 
