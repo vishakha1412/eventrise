@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { CLIENT_URL } from "../../config";
 
 export const OrganiserDashboard = () => {
   const [organiser, setOrganiser] = useState(null);
@@ -39,7 +40,7 @@ export const OrganiserDashboard = () => {
 
     // Fetch organiser by id
     axios
-      .get(`http://localhost:5000/api/organiser/${organiserId}`, {
+      .get(`${CLIENT_URL}/api/organiser/${organiserId}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -59,7 +60,7 @@ export const OrganiserDashboard = () => {
   const updateProfile = () => {
     axios
       .put(
-        `http://localhost:5000/api/auth/organiser/${organiser._id}`,
+        `${CLIENT_URL}/api/auth/organiser/${organiser._id}`, 
         form,
         { withCredentials: true }
       )
@@ -81,7 +82,7 @@ export const OrganiserDashboard = () => {
   };
 const handleDeleteEvent = () => {
     axios
-      .delete(`http://localhost:5000/api/event/${selectedEventId}`, {
+      .delete(`${CLIENT_URL}/api/event/${selectedEventId}`, {
         withCredentials: true,
       })
       .then(() => {

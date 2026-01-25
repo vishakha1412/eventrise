@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { CLIENT_URL } from "../../config";
 
 const OrganizerFeedbackDashboard = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -11,7 +12,7 @@ const OrganizerFeedbackDashboard = () => {
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/feedback/all", {
+        const res = await fetch(`${CLIENT_URL}/api/feedback/all`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

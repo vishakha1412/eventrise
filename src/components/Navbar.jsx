@@ -2,6 +2,7 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
 import axios from "axios";
+import { CLIENT_URL } from "../config";
 
 const navLinks = [
   { name: "Home", path: "/" },
@@ -48,7 +49,7 @@ setToken(localToken);
   // ✅ Logout handler
   const handleLogout = () => {
     axios
-      .get("http://localhost:5000/api/auth/organiser/logout", {
+      .get(`${CLIENT_URL}/api/auth/organiser/logout`, {
         withCredentials: true,
       })
       .then(() => {

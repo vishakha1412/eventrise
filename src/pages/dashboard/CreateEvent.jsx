@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { CLIENT_URL } from "../../config";
 
 export const CreateEvent = () => {
   const navigate=useNavigate();
@@ -26,7 +27,7 @@ const handleSubmit = async (e) => {
     payload.append("description", formData.description);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/event/", payload, {
+      const res = await axios.post(`${CLIENT_URL}/api/event/`, payload, {
         withCredentials: true,
          
       });

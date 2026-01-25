@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
 import {toast} from 'react-toastify';
+import { CLIENT_URL } from "../../config";
 
 export default function RegisterHost() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const handleChange = (e) =>
 
     e.preventDefault();
     try{
-  const response=await axios.post("http://localhost:5000/api/auth/organiser/register",{
+  const response=await axios.post(`${CLIENT_URL}/api/auth/organiser/register`,{
    name:form.name,
    email:form.email,
    password:form.password,

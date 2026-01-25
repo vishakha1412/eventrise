@@ -1,6 +1,7 @@
  import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { CLIENT_URL } from "../../config";
 
 export const Logout = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export const Logout = () => {
       return;
     }
  axios
-      .get("http://localhost:5000/api/auth/logout", {withCredentials:true}, {
+      .get(`${CLIENT_URL}/api/auth/logout`, {withCredentials:true}, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {

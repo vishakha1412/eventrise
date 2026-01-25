@@ -1,6 +1,7 @@
  import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import ExpandableText from "./ExpandableText";
+import { CLIENT_URL } from "../config";
 
 export const FeedbackForm = () => {
   const [formData, setFormData] = useState({
@@ -16,7 +17,7 @@ export const FeedbackForm = () => {
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/feedback/all");
+        const res = await fetch(`${CLIENT_URL}/api/feedback/all`);
         const data = await res.json();
         if (res.ok) {
           setFeedbacks(data);

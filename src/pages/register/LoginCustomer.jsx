@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
 import {toast} from 'react-toastify';
+import { CLIENT_URL } from "../../config";
 
 export default function LoginCustomer() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
-   
+    email: "",
+    password: ""
   });
 const [error, setError] = useState("");
 
@@ -17,7 +19,7 @@ const [error, setError] = useState("");
  const handleSubmit = async(e) => {
     e.preventDefault();
     try{
-  const response=await axios.post("http://localhost:5000/api/auth/user/login",{
+  const response=await axios.post( `${CLIENT_URL}/api/auth/user/login`,{
    email:form.email,
    password:form.password,
     
