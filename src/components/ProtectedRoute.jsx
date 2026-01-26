@@ -10,6 +10,7 @@ export default function ProtectedRoute({ children, allowedRole }) {
   };
 
   const cookieToken = getCookie("token");  
+  console.log("ProtectedRoute - role:", role, "allowedRole:", allowedRole, "cookieToken:", cookieToken);
 
   
   if (!cookieToken || role !== allowedRole) {
