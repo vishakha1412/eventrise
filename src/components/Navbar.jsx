@@ -3,6 +3,11 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
 import axios from "axios";
 import { SERVER_URL } from "../config";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
 
 const navLinks = [
   { name: "Home", path: "/" },
@@ -27,7 +32,7 @@ export default function Navbar() {
   };
 
   // ✅ Sync token and role on mount
-  useEffect(() => {
+ /* useEffect(() => {
      const localToken = localStorage.getItem("token");
 setToken(localToken);
    
@@ -44,26 +49,60 @@ setToken(localToken);
   setToken(cookieToken);
   setRole(localRole);
 });
-
-
-  // ✅ Logout handler
-  const handleLogout = () => {
-    axios
-      .get(`${SERVER_URL}/api/auth/organiser/logout`, {
+*/
+useEffect(() => {
+  
+  const fetchSession = async () => {
+    try {
+      const res = await axios.get(`${SERVER_URL}/api/auth/login/me`, {
         withCredentials: true,
-      })
-      .then(() => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("role");
-        setToken(null);
-        setRole(null);
-        alert("Logout successful");
-        navigate("/");
-      })
-      .catch((err) => {
-        console.error("Logout error:", err);
       });
+
+      setToken(true); // token exists if request succeeds
+      setRole(res.data?.role || null);
+      console.log("Role:", res.data?.role);
+    } catch (err) {
+      console.error("Session fetch failed:", err.response?.data || err.message);
+      setToken(null);
+      setRole(null);
+    }
   };
+
+  fetchSession();
+} );
+
+
+  const handleLogout = () => {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You will be logged out of your account.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, logout"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      axios
+        .get(`${SERVER_URL}/api/auth/organiser/logout`, {
+          withCredentials: true
+        })
+        .then(() => {
+          localStorage.removeItem("token");
+          localStorage.removeItem("role");
+          setToken(null);
+          setRole(null);
+          toast.success("Logout successful 👋");
+          navigate("/");
+        })
+        .catch((err) => {
+          console.error("Logout error:", err);
+          toast.error("Logout failed. Please try again.");
+        });
+    }
+  });
+};
+
 const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   return (

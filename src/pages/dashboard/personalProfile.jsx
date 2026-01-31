@@ -9,7 +9,6 @@ export const OrganiserDashboard = () => {
   const [events, setEvents] = useState([]);
   const [editMode, setEditMode] = useState(false);
 
-  // Editable fields
   const [form, setForm] = useState({
     businessName: "",
     email: "",
@@ -17,29 +16,23 @@ export const OrganiserDashboard = () => {
     address: "",
   });
 
-  // Delete modal state
+ 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
- // Toast state
+ 
   const [toast, setToast] = useState({ show: false, message: "", type: "" });
 
-  // Get token from cookie
-  const getCookie = (name) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(";").shift();
-  };
+const checkAuth = async () => {
+      try {
+      const res = await axios.get(`${SERVER_URL}/api/auth/login/me`, {
+        withCredentials: true, 
+      });
+    const data = res.data;
+      console.log("Auth response:", data);
 
-  useEffect(() => {
-    const token = getCookie("token");
-    if (!token) return;
-
-    // Decode ID from token
-    const decoded = jwtDecode(token);
-    const organiserId = decoded.id;
-
-    // Fetch organiser by id
-    axios
+      if (data.authenticated) {
+        const organiserId = data.userId;
+        axios
       .get(`${SERVER_URL}/api/organiser/${organiserId}`, {
         withCredentials: true,
       })
@@ -54,8 +47,22 @@ export const OrganiserDashboard = () => {
           address: res.data.eventOrganiser.address,
         });
       })
- .catch((err) => console.log(err));
-  }, []);
+       .catch((err) => console.log(err));
+         
+        
+      } else {
+        navigate("/login");
+      }
+    } catch (err) {
+      console.error("Auth check failed:", err);
+      navigate("/login");
+    }
+  }
+ 
+
+  useEffect(() => {
+    checkAuth();
+  },[])
 
   const updateProfile = () => {
     axios
@@ -71,11 +78,10 @@ export const OrganiserDashboard = () => {
       })
       .catch((err) => {
         console.log(err);
-        showToast("Failed to update profile.", "error");
+        showToast("Failed to update profile.\n" + err.response.data.message, "error");
       });
   };
-
-  // Delete event flow
+ 
   const confirmDeleteEvent = (eventId) => {
     setSelectedEventId(eventId);
     setShowDeleteModal(true);
@@ -98,7 +104,7 @@ const handleDeleteEvent = () => {
       });
   };
 
-  // Toast helper
+  
   const showToast = (message, type) => {
     setToast({ show: true, message, type });
     setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
@@ -113,19 +119,18 @@ const handleDeleteEvent = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.7 }}
-    >
-      {/* Page Title */}
+    > 
       <h1 className="text-4xl font-bold text-center mb-10 drop-shadow">
         Organiser Profile
       </h1>
 
-      {/* Profile Card */}
+    
       <motion.div
         className="max-w-3xl mx-auto bg-white/80 shadow-xl backdrop-blur-sm p-8 rounded-2xl"
         whileHover={{ scale: 1.01 }}
       >
         <div className="flex flex-col items-center">
-          {/* Logo */}
+          
           <div className="w-24 h-24 rounded-full bg-green-600 text-white flex items-center justify-center text-2xl font-bold shadow-md">
             {organiser.businessName?.charAt(0)}
           </div>
@@ -148,7 +153,7 @@ const handleDeleteEvent = () => {
             </>
           ) : (
             <>
-              {/* Edit Form */}
+            
               <div className="grid grid-cols-1 gap-3 w-full mt-6">
                 <input
                   type="text"
@@ -211,7 +216,7 @@ const handleDeleteEvent = () => {
         </div>
       </motion.div>
 
-      {/* Events Section */}
+   
       <div className="mt-12">
         <h2 className="text-3xl font-bold text-center mb-6">Your Events</h2>
 
@@ -236,7 +241,7 @@ const handleDeleteEvent = () => {
                   Price: {ev.price ? `₹${ev.price}` : "Free"}
                 </p>
 
-                {/* Delete Button (only organiser who created event) */}
+                 
                 {ev.eventOrganiser === organiser._id && (
                   <button
                     onClick={() => confirmDeleteEvent(ev._id)}
@@ -251,7 +256,7 @@ const handleDeleteEvent = () => {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
+      
       {showDeleteModal && (
         <motion.div
 className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
@@ -287,7 +292,7 @@ className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
         </motion.div>
       )}
 
-      {/* Toast Notification */}
+   
       {toast.show && (
         <motion.div
           className={`fixed bottom-5 right-5 px-4 py-2 rounded-lg shadow-lg text-white ${

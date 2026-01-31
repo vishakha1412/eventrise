@@ -33,15 +33,7 @@ const Hero = () => {
               Connect with top-rated decorators, caterers, and event professionals. Plan your dream wedding, birthday, or special occasion with trusted local vendors.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
-              <Link to="/browse">
-                <button size="lg" className="gradient-festive text-white shadow-celebration hover:shadow-glow transition-all px-8 group">
-                  Browse Vendors
-                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </Link>
-              
-            </div>
+             
           </div>
         </div>
         <Link to="features" smooth duration={500}>

@@ -100,6 +100,7 @@ const variants = {
               }`}
             >
               {cooldown > 0 ? `Resend in ${cooldown}s` : 'Send OTP'}
+              
             </button>
              <button
           type="button"

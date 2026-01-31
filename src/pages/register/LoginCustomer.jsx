@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import {toast} from 'react-toastify';
 import { SERVER_URL } from "../../config";
+ 
 
 export default function LoginCustomer() {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ export default function LoginCustomer() {
     email: "",
     password: ""
   });
+ 
 const [error, setError] = useState("");
 
   const handleChange = (e) =>
@@ -22,7 +24,7 @@ const [error, setError] = useState("");
   const response=await axios.post( `${SERVER_URL}/api/auth/user/login`,{
    email:form.email,
    password:form.password,
-    
+   
   },{withCredentials:true}
 
 )

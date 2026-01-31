@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { FaSearch, FaHeart, FaCalendarAlt, FaUserCog } from "react-icons/fa";
 
 // ✅ Define valid routes
-const validRoutes = ["browse", "/favorites", "/bookings", "/profile"];
+const validRoutes = ["browse", "saved-events", "/bookings", "/profile"];
 
 export default function CustomerDashboard() {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ export default function CustomerDashboard() {
     {
       label: "Saved Vendors",
       icon: <FaHeart className="text-3xl text-purple-600" />,
-      route: "favorites",
+      route: "saved-events",
       description: "Your favorite vendors at a glance.",
     },
     {
@@ -39,7 +39,7 @@ export default function CustomerDashboard() {
     if (validRoutes.includes(route)) {
       navigate(route);
     } else {
-      navigate("/under-development");
+       console.error("Invalid route:", route);
     }
   };
 

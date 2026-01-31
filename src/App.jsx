@@ -26,7 +26,9 @@ import { FeedbackForm } from "./components/FeedbackForm.jsx";
 import OrganizerFeedbackDashboard from "./pages/dashboard/OrganizerFeedbackDashboard.jsx";
 import { ForgotPassword } from "./pages/register/ForgotUserPassword.jsx";
 import { ForgotOrganiserPassword } from "./pages/register/ForgotOrganiserPassword.jsx";
+import SavedEventsPage from "./pages/SavedEvent.jsx";
  
+
 
 function App() {
  
@@ -43,6 +45,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword/>}/>
           <Route path='/forgot-organiser-password' element={<ForgotOrganiserPassword/>}/>
           <Route path="/browse" element= {<BrowsePage/>}/>
+          <Route path="/dashboard/customer/saved-events" element={<SavedEventsPage/>}/>
           <Route path="*" element={<UnderDevelopment/>} />
           <Route path="/register" element={<RegisterRole />} />
          <Route path="/register/customer" element={<RegisterCustomer />} />

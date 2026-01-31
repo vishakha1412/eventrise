@@ -44,6 +44,12 @@ export default function RegisterRole() {
         >
             Already have an account? Log In
         </button>
+         <button
+          onClick={() => navigate("/login")} // still have to connect to google oauth
+          className="bg-purple-600 text-white px-6 py-4 rounded-lg shadow-lg hover:bg-purple-700 transition duration-300 w-64"
+        >
+             <img src="/assets/google.png" alt="Google Sign-In" className="w-10 h-10 inline-block mr-2 -mt-1 border-r-5" />
+        </button>
       </motion.div>
     </motion.div>
   );

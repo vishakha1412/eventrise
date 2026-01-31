@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../../config";
+import EventCard from "./EventCard";
 
  
 
@@ -47,22 +48,45 @@ export const BrowsePage = () => {
     };
   };
 
+  const checkAuth = async () => {
+      try {
+      const res = await axios.get(`${SERVER_URL}/api/auth/login/me`, {
+        withCredentials: true, // browser sends cookie automatically
+      });
+
+      // ✅ If backend confirms authenticated, continue
+      if (!res.data?.authenticated) {
+        navigate("/register");
+        return;
+      }
+
+      console.log("User role:", res.data?.role);
+      // you can set role/token state here if needed
+    } catch (err) {
+      console.error("BrowsePage: auth check failed", err.response?.data || err.message);
+      navigate("/register"); // redirect if cookie invalid or request fails
+    }
+
+  }
   
   useEffect(() => {
     mountedRef.current = true;
-    const getCookie = (name) => {
+   /* const getCookie = (name) => {
       const value = `; ${document.cookie}`;
       const parts = value.split(`; ${name}=`);
       if (parts.length === 2) return parts.pop().split(";").shift();
       return undefined;
     };
     const token = getCookie("token");
+  
+
 
     if (!token) {
       navigate("/register");
       return;
     }
-
+*/
+  checkAuth();
     setIsLoading(true);
     setError(null);
 
@@ -110,6 +134,7 @@ export const BrowsePage = () => {
     };
   }, [navigate]);
  
+
   const applyFilters = useCallback(() => {
     let list = [...allEvents];
 
@@ -159,7 +184,7 @@ export const BrowsePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText, categoryFilter, locationFilter, priceFilter, activeTag, allEvents]);
 
-  // ---------- load more ----------
+   
   const loadMore = useCallback(() => {
     if (isLoadingMore) return;
     if (visibleEvents.length >= filteredEvents.length) return;
@@ -205,7 +230,7 @@ export const BrowsePage = () => {
     };
   }, [loadMore]);
 
-  // ---------- utils ----------
+  
   const resetFilters = () => {
     setSearchText("");
     setCategoryFilter("All");
@@ -222,8 +247,23 @@ export const BrowsePage = () => {
       return d;
     }
   };
+const handleLike = async (eventId) => {
+    try {
+      const res = await axios.post(`${SERVER_URL}/api/event/like`, { eventId }, { withCredentials: true });
+      toast.success(res.data.message);
+      setSavedEvents(prev =>
+        prev.map(ev =>
+          ev._id === eventId
+            ? { ...ev, likeCount: ev.likeCount + (res.data.message.includes("unliked") ? -1 : 1) }
+            : ev
+        )
+      );
+    } catch (err) {
+      toast.error("Error liking event");
+    }
+  };
 
-  // ---------- jsx ----------
+ 
   return (
     <motion.div
       className="min-h-screen px-6 py-10 font-poppins"
@@ -293,7 +333,7 @@ export const BrowsePage = () => {
           </div>
         </div>
 
-        {/* tag chips */}
+       
         <div className="mt-4 flex flex-wrap gap-3">
           <button
             onClick={() => setActiveTag(null)}
@@ -321,10 +361,9 @@ export const BrowsePage = () => {
           ))}
         </div>
       </div>
-
-      {/* grid */}
+ 
       <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {/* skeleton */}
+       
         {isLoading &&
           Array.from({ length: PAGE_SIZE }).map((_, i) => (
             <div
@@ -365,9 +404,9 @@ export const BrowsePage = () => {
               whileHover={{ scale: 1.02, y: -6 }}
               transition={{ type: "spring", stiffness: 260, damping: 22 }}
             >
-              {/* card wrapper: dark neon style */}
+            
               <div className="bg-[#1E1A2B] border border-[#321f4a] shadow-[0_14px_40px_rgba(95,44,255,0.18)] rounded-2xl overflow-hidden">
-                {/* image */}
+                 
                 <div className="relative h-48 overflow-hidden">
                   <img
                     src={event.image || ""}
@@ -385,7 +424,7 @@ export const BrowsePage = () => {
                   </div>
                 </div>
 
-                {/* content */}
+                
                 <div className="p-5 text-[#efe9ff]">
                   <div className="flex items-start justify-between gap-4">
                     <h2 className="text-xl font-semibold leading-tight text-[#f7eaff]">
@@ -440,16 +479,25 @@ export const BrowsePage = () => {
                     </Link>
                   </div>
                 </div>
+                <div className="p-4 text-white flex  flex-col  justify-between">
+                  <button
+                    onClick={() => handleLike(event._id)}
+                    className="px-3 py-1 rounded-md bg-[#2a2038] hover:bg-[#3a2a52] text-sm flex w-fit "
+                  >
+                    👍 Like ({event.likeCount || 0})
+                  </button>
+                  <EventCard event={event} className="w-full px-1" />
+                </div>
               </div>
             </motion.article>
           );
         })}
 
-        {/* sentinel */}
+        
         <div ref={sentinelRef} className="col-span-full h-2" />
       </div>
 
-      {/* load more indicator */}
+    
       {isLoadingMore && (
         <div className="max-w-6xl mx-auto text-center mt-6">
           <div className="inline-flex items-center gap-3 bg-white/6 px-4 py-2 rounded-lg">
@@ -478,7 +526,7 @@ export const BrowsePage = () => {
         </div>
       )}
 
-      {/* manual fallback */}
+     
       {!isLoading && !isLoadingMore && visibleEvents.length < filteredEvents.length && (
         <div className="max-w-6xl mx-auto text-center mt-6">
           <button
