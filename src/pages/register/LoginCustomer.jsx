@@ -34,6 +34,7 @@ const [error, setError] = useState("");
       autoClose: 3000,
       theme: "colored",
     })
+    localStorage.setItem("token",response.data.token);
 
  
     navigate("/dashboard/customer");

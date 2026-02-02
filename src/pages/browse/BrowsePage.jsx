@@ -15,6 +15,7 @@ export const BrowsePage = () => {
   const [allEvents, setAllEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [visibleEvents, setVisibleEvents] = useState([]);
+   
 
   // ui states
   const [isLoading, setIsLoading] = useState(true);
@@ -247,21 +248,7 @@ export const BrowsePage = () => {
       return d;
     }
   };
-const handleLike = async (eventId) => {
-    try {
-      const res = await axios.post(`${SERVER_URL}/api/event/like`, { eventId }, { withCredentials: true });
-      toast.success(res.data.message);
-      setSavedEvents(prev =>
-        prev.map(ev =>
-          ev._id === eventId
-            ? { ...ev, likeCount: ev.likeCount + (res.data.message.includes("unliked") ? -1 : 1) }
-            : ev
-        )
-      );
-    } catch (err) {
-      toast.error("Error liking event");
-    }
-  };
+ 
 
  
   return (
@@ -480,12 +467,7 @@ const handleLike = async (eventId) => {
                   </div>
                 </div>
                 <div className="p-4 text-white flex  flex-col  justify-between">
-                  <button
-                    onClick={() => handleLike(event._id)}
-                    className="px-3 py-1 rounded-md bg-[#2a2038] hover:bg-[#3a2a52] text-sm flex w-fit "
-                  >
-                    👍 Like ({event.likeCount || 0})
-                  </button>
+                  
                   <EventCard event={event} className="w-full px-1" />
                 </div>
               </div>

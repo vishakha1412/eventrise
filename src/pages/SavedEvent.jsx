@@ -56,10 +56,10 @@ const handleLike = async (eventId) => {
  return (
   <div>
    <h2 className="text-2xl font-bold mb-4 text-center text-gray-900 py-4">My Saved Events</h2>
-     <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+     <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 space-x-2">
      
       {savedEvents.length === 0 ? (
-        <div className="col-span-full text-center py-10">
+        <div className="col-span-full text-center py-10 ">
         <p className=" items-center text-gray-900">No saved events yet.</p>
         </div>
       ) : (
@@ -80,7 +80,7 @@ const handleLike = async (eventId) => {
               whileHover={{ scale: 1.02, y: -6 }}
               transition={{ type: "spring", stiffness: 260, damping: 22 }}
             >
-              <div className="bg-[#1E1A2B] border border-[#321f4a] shadow-[0_14px_40px_rgba(95,44,255,0.18)] rounded-2xl overflow-hidden">
+              <div className="bg-[#1E1A2B] border border-[#321f4a] shadow-[0_14px_40px_rgba(95,44,255,0.18)] rounded-2xl overflow-hidden m-5">
                 <div className="relative h-48 overflow-hidden">
                   <img
   src={event.image || ""}
