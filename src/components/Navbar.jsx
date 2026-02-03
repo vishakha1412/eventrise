@@ -24,13 +24,7 @@ export default function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [token, setToken] = useState(null);
   const [role, setRole] = useState(null);
- // ✅ Cookie reader
-  const getCookie = (name) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(";").shift();
-  };
-
+ 
   // ✅ Sync token and role on mount
  /* useEffect(() => {
      const localToken = localStorage.getItem("token");
@@ -65,14 +59,18 @@ useEffect(() => {
       console.error("Session fetch failed:", err.response?.data || err.message);
       setToken(null);
       setRole(null);
+      navigate("/");
+      window.location.reload();
+    
+
     }
   };
 
   fetchSession();
-} );
+} ,[token,role]);
 
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
   Swal.fire({
     title: "Are you sure?",
     text: "You will be logged out of your account.",
@@ -81,10 +79,9 @@ useEffect(() => {
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
     confirmButtonText: "Yes, logout"
-  }).then((result) => {
+  }).then(async (result) => {
     if (result.isConfirmed) {
-      axios
-        .get(`${SERVER_URL}/api/auth/organiser/logout`, {
+      await axios.get(`${SERVER_URL}/api/auth/organiser/logout`, {
           withCredentials: true
         })
         .then(() => {

@@ -27,6 +27,7 @@ import OrganizerFeedbackDashboard from "./pages/dashboard/OrganizerFeedbackDashb
 import { ForgotPassword } from "./pages/register/ForgotUserPassword.jsx";
 import { ForgotOrganiserPassword } from "./pages/register/ForgotOrganiserPassword.jsx";
 import SavedEventsPage from "./pages/SavedEvent.jsx";
+import UserProfile from "./pages/dashboard/CustomerProfile.jsx";
  
 
 
@@ -64,6 +65,7 @@ function App() {
           <Route path='/register/login/host' element={<LoginHost/>}/>
           <Route path='/create-event' element={<CreateEvent/>}/>
           <Route path='/organiser/:id' element={<BusinessProfile/>}/>
+          <Route path='/dashboard/customer/profile' element={<UserProfile/>}/>
           <Route path='/dashboard/host/profile' element={<OrganiserDashboard/>}/>
           <Route path='/under-development' element={<UnderDevelopment/>}/>
           <Route path='/dashboard/customer/browse' element={<BrowsePage/>}/>

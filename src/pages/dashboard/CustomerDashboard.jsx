@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { FaSearch, FaHeart, FaCalendarAlt, FaUserCog } from "react-icons/fa";
 
 // ✅ Define valid routes
-const validRoutes = ["browse", "saved-events", "/bookings", "/profile"];
+const validRoutes = ["browse", "saved-events", "/bookings", "/dashboard/customer/profile"];
 
 export default function CustomerDashboard() {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ export default function CustomerDashboard() {
     {
  label: "Profile Settings",
       icon: <FaUserCog className="text-3xl text-purple-600" />,
-      route: "profile",
+      route: "/dashboard/customer/profile",
       description: "Update your preferences and contact info.",
     },
   ];
