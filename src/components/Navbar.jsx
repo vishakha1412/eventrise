@@ -59,8 +59,7 @@ useEffect(() => {
       console.error("Session fetch failed:", err.response?.data || err.message);
       setToken(null);
       setRole(null);
-      navigate("/");
-      window.location.reload();
+      
     
 
     }
