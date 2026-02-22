@@ -1,13 +1,15 @@
   import { useNavigate, Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaSearch, FaHeart, FaCalendarAlt, FaUserCog } from "react-icons/fa";
+import { Delete } from "lucide-react";
+ 
 
 // ✅ Define valid routes
 const validRoutes = ["browse", "saved-events", "/bookings", "/dashboard/customer/profile"];
 
 export default function CustomerDashboard() {
   const navigate = useNavigate();
-
+   
   const cards = [
     {
       label: "Browse Services",
@@ -95,6 +97,7 @@ export default function CustomerDashboard() {
       <div className="mt-12">
         <Outlet />
       </div>
+ 
     </div>
   );
 }

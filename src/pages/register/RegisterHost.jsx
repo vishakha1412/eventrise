@@ -4,9 +4,11 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import {toast} from 'react-toastify';
 import { SERVER_URL } from "../../config";
+import { Toaster } from "react-hot-toast";
 
 export default function RegisterHost() {
   const navigate = useNavigate();
+  const[loading,setLoading]=useState(false);
   const [form, setForm] = useState({
     name: "",
     businessName: "",
@@ -23,7 +25,7 @@ const handleChange = (e) =>
   
 //name,businessName,phone,address,email,password
   const handleSubmit = async(e) => {
-
+  setLoading(true);
     e.preventDefault();
     try{
   const response=await axios.post(`${SERVER_URL}/api/auth/organiser/register`,{
@@ -37,6 +39,7 @@ const handleChange = (e) =>
   },{withCredentials:true}
 
 )   
+setLoading(false);
 toast.success("Registration successful! Please verify your email before logging in.",{
       position: "top-center",
       autoClose: 3000,
@@ -45,6 +48,7 @@ toast.success("Registration successful! Please verify your email before logging 
   console.log(response.data);
     navigate("/dashboard/host");}
     catch(e){
+      setLoading(false);
       const error=e.response.data.error || e.response.data.message;
       console.log(error)
         toast.error(error,{
@@ -54,6 +58,26 @@ toast.success("Registration successful! Please verify your email before logging 
     })
     }
   };
+  const variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+    if(loading){
+    return <div className="min-h-screen flex items-center justify-center">
+      <Toaster position="top-center" />
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={variants}
+        transition={{ duration: 0.5 }}
+        className="max-w-md w-full space-y-8 bg-purple-50/80 p-8 rounded-lg shadow-md"
+      >
+        <h2 className="text-center text-3xl font-extrabold text-gray-900">
+          Loading...
+        </h2>
+      </motion.div>
+    </div>
+  }
 
 return (
     <motion.div

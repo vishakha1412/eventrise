@@ -66,7 +66,7 @@ useEffect(() => {
   };
 
   fetchSession();
-} ,[token,role]);
+} );
 
 
   const handleLogout = async() => {

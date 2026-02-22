@@ -7,7 +7,7 @@ export default function HostDashboard() {
   const dashboardItems = [
     { label: "My Profile", icon: "👤", link: "/dashboard/host/profile" },
     { label: "Upload Event Photos", icon: "🖼️", link: "/host/photos" },
-    { label: "Manage Services", icon: "🛠️", link: "/host/services" },
+    { label: "Saved Services", icon: "🛠️", link: "/saved-organiser-events" },
     { label: "Pricing & Packages", icon: "💰", link: "/host/pricing" },
     { label: "Customer Requests", icon: "📩", link: "/under" },
     { label: "Reviews & Ratings", icon: "⭐", link: "/host/reviews" },

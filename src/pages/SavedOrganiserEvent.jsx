@@ -1,4 +1,4 @@
- import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { SERVER_URL } from '../config';
 import { motion } from 'framer-motion';
@@ -6,22 +6,9 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Toaster } from 'react-hot-toast';
 
-function SavedEventsPage() {
+function SavedOrganiserPage() {
   const [savedEvents, setSavedEvents] = useState([]);
   const[loading,setLoading]=useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const images = Array.isArray(event.images) && event.images.length > 0
-    ? event.images
-    : [event.image]; // fallback if only single image string
-
-  const nextImage = () => {
-    setCurrentIndex((prev) => (prev + 1) % images.length);
-  };
-
-  const prevImage = () => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
 
   const formatDate = (d) => {
     if (!d) return "TBA";
@@ -70,6 +57,7 @@ const handleLike = async (eventId) => {
         const res = await axios.get(`${SERVER_URL}/api/event/saved`, { withCredentials: true });
         setSavedEvents(res.data.savedEvents);
       } catch (err) {
+        setLoading(false);
         console.error(err.response?.data?.message || "Error fetching saved events");
       }
     };
@@ -198,7 +186,7 @@ const handleLike = async (eventId) => {
   );
 }
 
-export default SavedEventsPage;
+export default SavedOrganiserPage;
 
 
 

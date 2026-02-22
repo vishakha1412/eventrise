@@ -2,14 +2,16 @@
 import axios from "axios";
 import { SERVER_URL } from "../../config";
 import { useNavigate } from "react-router-dom";
+import DeleteAccountButton from "../../components/DeleteAccountButton";
 
 function UserProfile() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
+      setLoading(true);
       try {
         const res = await axios.get(`${SERVER_URL}/api/auth/login/me`, {
           withCredentials: true,
@@ -20,12 +22,19 @@ function UserProfile() {
           axios
             .get(`${SERVER_URL}/api/user/${customerId}`, {
               withCredentials: true,
+              headers:{
+                Authorization:`Bearer ${data.token}`
+              }
             })
  .then((res) => {
+          setLoading(false);
               console.log("Customer Data:", res.data);
               setUser(res.data);
             })
-            .catch((err) => console.log(err));
+            .catch((err) =>
+              {
+                setLoading(false);
+                 console.log(err)});
         } else {
           navigate("/login");
         }
@@ -76,6 +85,7 @@ function UserProfile() {
           <span className="font-semibold text-purple-700">Role:</span> {user.role}
         </p>
       </div>
+      <DeleteAccountButton role={user.role}/>
     </div>
 );
 }

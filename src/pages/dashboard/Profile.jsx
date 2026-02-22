@@ -4,20 +4,25 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { SERVER_URL } from "../../config";
+import EventCards from "../../components/EventCards";
 
 export const BusinessProfile = () => {
   const { id } = useParams();
   const [profile, setProfile] = useState(null);
   const [events, setEvents] = useState([]);
+  const[loading,setLoading]=useState(false);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`${SERVER_URL}/api/organiser/${id}`, { withCredentials: true })
       .then((response) => {
         setProfile(response.data.eventOrganiser);
         setEvents(response.data.eventOrganiser.event);
+        setLoading(false);
       })
       .catch((e) => {
+        setLoading(false);
         console.log(e);
       });
   }, [id]);
@@ -69,11 +74,7 @@ export const BusinessProfile = () => {
           <h2 className="text-lg font-semibold text-purple-300">Total Events</h2>
           <p className="text-3xl font-bold mt-1">{profile?.event.length}</p>
         </div>
-
-        <div className="bg-[#1e1b29] text-white p-4 rounded-xl shadow-lg border border-purple-500/40 hover:scale-105 transition">
-          <h2 className="text-lg font-semibold text-purple-300">Customers Served</h2>
-          <p className="text-3xl font-bold mt-1">{profile?.customersServed}</p>
-        </div>
+ 
       </motion.div>
 
       {/* Contact Bar */}
@@ -113,40 +114,16 @@ export const BusinessProfile = () => {
       </motion.div>
 
       {/* Events Section */}
-      <h2 className="text-3xl font-semibold text-purple-700 dark:text-purple-400 mb-6 text-center">
-        Events by {profile?.businessName}
-      </h2>
+      
+ <motion.div
+  className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+>
+  {events.map((event) => (
+    <EventCards key={event._id} event={event} />
+  ))}
+</motion.div>
 
-      <motion.div
-        className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-        initial="hidden"
-        animate="visible"
-        variants={{
-          hidden: { opacity: 0 },
-          visible: {
-            opacity: 1,
-            transition: { staggerChildren: 0.2 },
-          },
-        }}
-      >
-        {events.map((event, index) => (
-          <motion.div
-            key={event._id}
-            className="rounded-xl overflow-hidden shadow-xl border border-purple-500/40 bg-[#1e1b29] text-white hover:scale-105 transition"
-            whileHover={{ scale: 1.05 }}
-          >
-            <img
-              src={event.image}
-              alt={`event ${index + 1}`}
-              className="w-full h-48 object-cover"
-            />
-            <div className="p-4">
-              <h3 className="text-lg font-semibold text-purple-300">{event.name}</h3>
-              <p className="text-sm text-gray-300 mt-1">{event.description}</p>
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+
     </motion.div>
   );
 };

@@ -13,6 +13,7 @@ export const ForgotOrganiserPassword = () => {
   const [newPassword, setNewPassword] = useState('');
   const [cooldown, setCooldown] = useState(0);
   const [passwordScore, setPasswordScore] = useState(0);
+  const[loading,setLoading]=useState(false);
     const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,34 +26,42 @@ export const ForgotOrganiserPassword = () => {
   }, [newPassword]);
 
   const handleEmailSubmit = async (e) => {
+
     e.preventDefault();
 try {
+      setLoading(true);
       await axios.post(`${SERVER_URL}/api/auth/organiser/request-password-reset`, { email });
-      
+      setLoading(false);
       toast.success('OTP sent to your email');
       setStep(2);
-      setCooldown(60);  
+      setCooldown(60); 
+
     } catch (err) {
       toast.error(err.response?.data?.message || 'Error sending OTP');
     }
   };
 
   const handleOtpSubmit = (e) => {
+    
     e.preventDefault();
     if (!otp.trim()) return toast.error('Please enter the OTP');
     setStep(3);
   };
 
   const handlePasswordSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     try {
       await axios.post(`${SERVER_URL}/api/auth/organiser/reset-password`, { email, otp, newPassword });
+        setLoading(false);
       toast.success('Password reset successful');
       setStep(1);
       setEmail('');
       setOtp('');
       setNewPassword('');
+    
     } catch (err) {
+      setLoading(false);
       toast.error(err.response?.data?.message || 'Error resetting password');
     }
   };
@@ -64,6 +73,22 @@ const variants = {
   const strengthLabels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
   const strengthColors = ['bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-green-400', 'bg-emerald-500'];
 
+  if(loading){
+    return <div className="min-h-screen flex items-center justify-center">
+      <Toaster position="top-center" />
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={variants}
+        transition={{ duration: 0.5 }}
+        className="max-w-md w-full space-y-8 bg-purple-50/80 p-8 rounded-lg shadow-md"
+      >
+        <h2 className="text-center text-3xl font-extrabold text-gray-900">
+          Loading...
+        </h2>
+      </motion.div>
+    </div>
+  }
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <Toaster position="top-center" />

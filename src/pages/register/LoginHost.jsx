@@ -1,12 +1,15 @@
  import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { SERVER_URL } from "../../config";
+import { Toaster } from "react-hot-toast";
+ 
 
 export default function LoginHost() {
   const navigate = useNavigate();
+  const[loading,setLoading]=useState(false);
   const [form, setForm] = useState({
     email: "",
     password: ""
@@ -36,7 +39,7 @@ export default function LoginHost() {
       });
       return;
     }
-
+    setLoading(true);
     await axios
       .post(
         `${SERVER_URL}/api/auth/organiser/login`,
@@ -48,7 +51,8 @@ export default function LoginHost() {
       )
       .then((response) => {
         localStorage.setItem("role", response.data.role);
-        toast.success("Registration successful! Please verify your email before logging in.", {
+        setLoading(false);
+        toast.success("Login successful!", {
           position: "top-center",
           autoClose: 3000,
           theme: "colored",
@@ -56,8 +60,10 @@ export default function LoginHost() {
         navigate("/dashboard/host");
       })
       .catch((error) => {
+        setLoading(false);
         const errMsg = error.response.data.error || error.response.data.message;
         setError(errMsg);
+        setLoading(false);
         toast.error(errMsg, {
           position: "top-center",
           autoClose: 3000,
@@ -65,6 +71,26 @@ export default function LoginHost() {
         });
       });
   };
+  const variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+    if(loading){
+    return <div className="min-h-screen flex items-center justify-center">
+      <Toaster position="top-center" />
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={variants}
+        transition={{ duration: 0.5 }}
+        className="max-w-md w-full space-y-8 bg-purple-50/80 p-8 rounded-lg shadow-md"
+      >
+        <h2 className="text-center text-3xl font-extrabold text-gray-900">
+          Loading...
+        </h2>
+      </motion.div>
+    </div>
+  }
 
   return (
     <motion.div
@@ -90,7 +116,7 @@ export default function LoginHost() {
             required
             className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
-        </div>
+        </div>  
 
         <div>
           <label className="block text-sm font-medium text-purple-600">Password</label>
@@ -121,6 +147,15 @@ export default function LoginHost() {
         >
           Forgot Password?
         </button>
+         <button
+          type="button"
+          onClick={() => navigate('/resend-verification-email') }
+          
+           className="w-full mt-2 bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600 transition"
+>
+            Resend Verification Email 
+</button>
+
       </form>
     </motion.div>
   );

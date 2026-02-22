@@ -1,13 +1,31 @@
  import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
+import DeleteAccountButton from "../../components/DeleteAccountButton";
 import { SERVER_URL } from "../../config";
+ 
 
 export const OrganiserDashboard = () => {
   const [organiser, setOrganiser] = useState(null);
   const [events, setEvents] = useState([]);
   const [editMode, setEditMode] = useState(false);
+  const[loading,setLoading]=useState(false);
+  const [carouselIndices, setCarouselIndices] = useState({});
+
+const nextImage = (eventId, imagesLength) => {
+  setCarouselIndices((prev) => ({
+    ...prev,
+    [eventId]: ((prev[eventId] || 0) + 1) % imagesLength,
+  }));
+};
+
+const prevImage = (eventId, imagesLength) => {
+  setCarouselIndices((prev) => ({
+    ...prev,
+    [eventId]: ((prev[eventId] || 0) - 1 + imagesLength) % imagesLength,
+  }));
+};
+
 
   const [form, setForm] = useState({
     businessName: "",
@@ -23,15 +41,18 @@ export const OrganiserDashboard = () => {
   const [toast, setToast] = useState({ show: false, message: "", type: "" });
 
 const checkAuth = async () => {
+  setLoading(true);
       try {
       const res = await axios.get(`${SERVER_URL}/api/auth/login/me`, {
         withCredentials: true, 
       });
     const data = res.data;
-      console.log("Auth response:", data);
+    setLoading(false);
+       
 
       if (data.authenticated) {
         const organiserId = data.userId;
+         
         axios
       .get(`${SERVER_URL}/api/organiser/${organiserId}`, {
         withCredentials: true,
@@ -46,10 +67,11 @@ const checkAuth = async () => {
           phone: res.data.eventOrganiser.phone,
           address: res.data.eventOrganiser.address,
         });
+
       })
        .catch((err) => console.log(err));
          
-        
+        setLoading(false);
       } else {
         navigate("/login");
       }
@@ -65,6 +87,7 @@ const checkAuth = async () => {
   },[])
 
   const updateProfile = () => {
+    setLoading(true);
     axios
       .put(
         `${SERVER_URL}/api/auth/organiser/${organiser._id}`, 
@@ -74,10 +97,12 @@ const checkAuth = async () => {
       .then(() => {
         setOrganiser({ ...organiser, ...form });
         setEditMode(false);
+        setLoading(false);
         showToast("Profile updated successfully!", "success");
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
         showToast("Failed to update profile.\n" + err.response.data.message, "error");
       });
   };
@@ -87,6 +112,7 @@ const checkAuth = async () => {
     setShowDeleteModal(true);
   };
 const handleDeleteEvent = () => {
+   setLoading(true);
     axios
       .delete(`${SERVER_URL}/api/event/${selectedEventId}`, {
         withCredentials: true,
@@ -95,11 +121,13 @@ const handleDeleteEvent = () => {
         setEvents(events.filter((ev) => ev._id !== selectedEventId));
         setShowDeleteModal(false);
         setSelectedEventId(null);
+        setLoading(false);
         showToast("Event deleted successfully!", "success");
       })
       .catch((err) => {
         console.error(err);
         setShowDeleteModal(false);
+        setLoading(false);
         showToast("Failed to delete event.", "error");
       });
   };
@@ -112,7 +140,9 @@ const handleDeleteEvent = () => {
 
   if (!organiser)
     return <div className="text-center mt-20 text-xl">Loading...</div>;
-
+   if(loading){
+    return <div className="text-center mt-20 text-xl">Loading...Please wait</div>;
+   }
   return (
  <motion.div
       className="min-h-screen px-6 py-10 font-poppins text-gray-900"
@@ -143,13 +173,14 @@ const handleDeleteEvent = () => {
 <p className="text-gray-700">{organiser.email}</p>
               <p className="text-gray-700">{organiser.phone}</p>
               <p className="text-gray-700">{organiser.address}</p>
-
+              <div className='flex justify-between'>
               <button
                 onClick={() => setEditMode(true)}
                 className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg transition"
               >
                 Edit Profile
               </button>
+               <DeleteAccountButton role={organiser.role}/></div>
             </>
           ) : (
             <>
@@ -215,45 +246,98 @@ const handleDeleteEvent = () => {
           )}
         </div>
       </motion.div>
-
+     
    
       <div className="mt-12">
         <h2 className="text-3xl font-bold text-center mb-6">Your Events</h2>
 
-        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {events.map((ev) => (
-            <motion.div
-              key={ev._id}
-              className="rounded-xl overflow-hidden bg-white/80 shadow-lg"
-              whileHover={{ scale: 1.05 }}
-            >
-              <img
-                src={ev.image}
-                alt={ev.name}
-                className="w-full h-40 object-cover"
-              />
-<div className="p-4">
-                <h3 className="font-bold text-lg">{ev.name}</h3>
-                <p className="text-sm text-gray-600 line-clamp-2">
-                  {ev.description}
-                </p>
-                <p className="text-sm mt-1 text-gray-700">
-                  Price: {ev.price ? `₹${ev.price}` : "Free"}
-                </p>
+      <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+  {events.map((ev) => {
+    const images = Array.isArray(ev.images) && ev.images.length > 0
+      ? ev.images
+      : ev.image
+      ? [ev.image]
+      : [];
 
-                 
-                {ev.eventOrganiser === organiser._id && (
-                  <button
-                    onClick={() => confirmDeleteEvent(ev._id)}
-                    className="mt-3 bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded-md text-sm"
-                  >
-                    Delete Event
-                  </button>
-                )}
-              </div>
-            </motion.div>
-          ))}
+    const currentIndex = carouselIndices[ev._id] || 0;
+
+    return (
+      <motion.div
+        key={ev._id}
+        className="rounded-xl overflow-hidden bg-white/80 shadow-lg relative"
+        whileHover={{ scale: 1.05 }}
+      >
+        {/* Image carousel */}
+        {images.length > 0 ? (
+          <div className="relative w-full h-40">
+            <motion.img
+              key={currentIndex}
+              src={images[currentIndex]}
+              alt={ev.name}
+ className="w-full h-full object-cover"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            />
+
+            {images.length > 1 && (
+              <>
+                <button
+                  onClick={() => prevImage(ev._id, images.length)}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full p-2 hover:bg-black/60"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={() => nextImage(ev._id, images.length)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full p-2 hover:bg-black/60"
+                >
+                  ›
+                </button>
+
+                <div className="absolute bottom-2 w-full flex justify-center gap-1">
+                  {images.map((_, i) => (
+                    <div
+                      key={i}
+                      className={`w-2 h-2 rounded-full ${
+                        i === currentIndex ? "bg-yellow-400" : "bg-gray-400"
+                      }`}
+                    />
+ ))}
+                </div>
+              </>
+            )}
+          </div>
+        ) : (
+          <div className="w-full h-40 flex items-center justify-center bg-gray-300 text-gray-600">
+            No image available
+          </div>
+        )}
+
+        {/* Event Info */}
+        <div className="p-4">
+          <h3 className="font-bold text-lg">{ev.name}</h3>
+          <p className="text-sm text-gray-600 line-clamp-2">{ev.description}</p>
+          <p className="text-sm mt-1 text-gray-700">
+            Price: {ev.price ? `₹${ev.price}` : "Free"}
+          </p>
+
+          {ev.eventOrganiser === organiser._id && (
+            <button
+              onClick={() => confirmDeleteEvent(ev._id)}
+              className="mt-3 bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded-md text-sm"
+            >
+              Delete Event
+            </button>
+  )}
         </div>
+      </motion.div>
+    );
+  })}
+</div>
+
+
+
       </div>
 
       

@@ -5,11 +5,13 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../../config";
 import EventCard from "./EventCard";
+import PostCard from "./PostCard";
 
  
 
 export const BrowsePage = () => {
   const navigate = useNavigate();
+
 
   // data
   const [allEvents, setAllEvents] = useState([]);
@@ -39,6 +41,22 @@ export const BrowsePage = () => {
   const sentinelRef = useRef(null);
   const observerRef = useRef(null);
   const mountedRef = useRef(false);
+   const [carouselIndices, setCarouselIndices] = useState({});
+  
+  const nextImage = (eventId, imagesLength) => {
+    setCarouselIndices((prev) => ({
+      ...prev,
+      [eventId]: ((prev[eventId] || 0) + 1) % imagesLength,
+    }));
+  };
+  
+  const prevImage = (eventId, imagesLength) => {
+    setCarouselIndices((prev) => ({
+      ...prev,
+      [eventId]: ((prev[eventId] || 0) - 1 + imagesLength) % imagesLength,
+    }));
+  };
+  
 
   
   const debounce = (fn, delay = 300) => {
@@ -72,32 +90,20 @@ export const BrowsePage = () => {
   
   useEffect(() => {
     mountedRef.current = true;
-   /* const getCookie = (name) => {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(";").shift();
-      return undefined;
-    };
-    const token = getCookie("token");
-  
-
-
-    if (!token) {
-      navigate("/register");
-      return;
-    }
-*/
+   
   checkAuth();
     setIsLoading(true);
     setError(null);
 
     axios
       .get(`${SERVER_URL}/api/event/`, { withCredentials: true })
-      .then((res) => {
+     .then((res) => {
         if (!mountedRef.current) return;
         const ev = Array.isArray(res.data.events) ? res.data.events : [];
         
         setAllEvents(ev);
+        
+          
         setFilteredEvents(ev);
         pageRef.current = 1;
         setVisibleEvents(ev.slice(0, PAGE_SIZE));
@@ -372,108 +378,18 @@ export const BrowsePage = () => {
             No events found. Try adjusting filters.
           </div>
         )}
+      {visibleEvents.map((event) => (
+  <motion.article
+    key={event._id}
+    className="transform transition-all"
+    whileHover={{ scale: 1.02, y: -6 }}
+    transition={{ type: "spring", stiffness: 260, damping: 22 }}
+  >
+    <PostCard event={event} />
+  </motion.article>
+))}
 
-        {visibleEvents.map((event) => {
-          const title = event.name || "Untitled";
-          const desc = event.description || "";
-          const priceText =
-            event.price && Number(event.price) > 0 ? `₹${event.price}` : "Free";
-          const category = event.category || "General";
-          const location = event.location || "Online";
-          const date = formatDate(event.date) || "TBA";
-          const capacity = event.capacity || "As per venue";
-          const evTags = Array.isArray(event.tags) ? event.tags : [];
-
-          return (
-            <motion.article
-              key={event._id || title + Math.random()}
-              className="rounded-2xl overflow-hidden transform transition-all"
-              whileHover={{ scale: 1.02, y: -6 }}
-              transition={{ type: "spring", stiffness: 260, damping: 22 }}
-            >
-            
-              <div className="bg-[#1E1A2B] border border-[#321f4a] shadow-[0_14px_40px_rgba(95,44,255,0.18)] rounded-2xl overflow-hidden">
-                 
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={event.image || ""}
-                    alt={title}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                    onError={(e) => {
-                      e.currentTarget.onerror = null;
-                      e.currentTarget.src =
-                        "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450' viewBox='0 0 800 450'%3E%3Crect fill='%23221b33' width='800' height='450'/%3E%3Ctext x='50%25' y='50%25' fill='%23d9c7ff' font-size='20' dominant-baseline='middle' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E";
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f0816]/80 to-transparent" />
-                  <div className="absolute top-3 right-3 px-3 py-1 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-[#7b2cff] to-[#ff3cac] shadow-lg">
-                    {priceText}
-                  </div>
-                </div>
-
-                
-                <div className="p-5 text-[#efe9ff]">
-                  <div className="flex items-start justify-between gap-4">
-                    <h2 className="text-xl font-semibold leading-tight text-[#f7eaff]">
-                      {title}
-                    </h2>
-                    <div className="px-2 py-1 text-sm rounded-md bg-[#2a2038] text-[#e7d8ff] border border-[#3a2a52]">
-                      {category}
-                    </div>
-                  </div>
-
-                  <p className="text-sm text-[#d9d0f7] mt-2 line-clamp-2">
-                    {desc}
-                  </p>
-
-                  <div className="grid grid-cols-2 gap-2 text-sm text-[#cfc1f8] mt-4">
-                    <div>
-                      <span className="font-medium text-[#efe9ff]">Location:</span>{" "}
-                      {location}
-                    </div>
-                    <div>
-                      <span className="font-medium text-[#efe9ff]">Date:</span>{" "}
-                      {date}
-                    </div>
-                    <div>
-                      <span className="font-medium text-[#efe9ff]">Capacity:</span>{" "}
-                      {capacity}
-                    </div>
-                    <div>
-                      <span className="font-medium text-[#efe9ff]">Organizer:</span>{" "}
-                      {event.name || "—"}
-                    </div>
-                  </div>
-
-                  <div className="mt-4 flex items-center justify-between">
-                    <div className="flex gap-2 flex-wrap">
-                      {evTags.slice(0, 3).map((t) => (
-                        <button
-                          key={t}
-                          onClick={() => setActiveTag(t)}
-                          className="text-xs px-2 py-1 rounded-full bg-[#2a2236] text-[#eaddff] border border-transparent"
-                        >
-                          #{t}
-                        </button>
-                      ))}
-                    </div>
-
-                    <Link
-                      to={`/organiser/${event.eventOrganiser}`}
-                      className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-[#7b2cff] to-[#ff3cac] text-white text-sm font-semibold shadow-md hover:opacity-95"
-                    >
-                      Visit Shop →
-                    </Link>
-                  </div>
-                </div>
-                <div className="p-4 text-white flex  flex-col  justify-between">
-                  
-                  <EventCard event={event} className="w-full px-1" />
-                </div>
-              </div>
-            </motion.article>
-          );
-        })}
+        
 
         
         <div ref={sentinelRef} className="col-span-full h-2" />

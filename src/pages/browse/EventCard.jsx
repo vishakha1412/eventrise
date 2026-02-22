@@ -16,7 +16,13 @@ function EventCard({ event }) {
        setLikeCount(prev => prev + (liked ? 1 : -1));
       
      setIsLiked(liked);
-    
+    /*  setSavedEvents(prev =>
+        prev.map(ev =>
+          ev._id === eventId
+            ? { ...ev, likeCount: ev.likeCount + (res.data.message.includes("unliked") ? -1 : 1) }
+            : ev
+        )
+      );*/
     } catch (err) {
       toast.error("Error liking event");
     }

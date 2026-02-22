@@ -28,6 +28,12 @@ import { ForgotPassword } from "./pages/register/ForgotUserPassword.jsx";
 import { ForgotOrganiserPassword } from "./pages/register/ForgotOrganiserPassword.jsx";
 import SavedEventsPage from "./pages/SavedEvent.jsx";
 import UserProfile from "./pages/dashboard/CustomerProfile.jsx";
+import VerifyEmailPage from "./components/VerifyEmail.jsx";
+import SavedOrganiserPage from "./pages/SavedOrganiserEvent.jsx";
+import DeleteAccountButton from "./components/DeleteAccountButton.jsx";
+import ResendVerification from "./components/ResendVerification.jsx";
+import EventCards from "./components/EventCards.jsx";
+import PostCard from "./pages/browse/PostCard.jsx";
  
 
 
@@ -60,6 +66,7 @@ function App() {
             <HostDashboard />
           </ProtectedRoute>} />
           <Route path="/feedback" element={<FeedbackForm/>}/>
+          <Route path="/event" element={<EventCards/>}/>
           <Route path="/host/requests" element={<OrganizerFeedbackDashboard/>}/>
           <Route path='/register/login/user' element={<LoginCustomer/>}/>
           <Route path='/register/login/host' element={<LoginHost/>}/>
@@ -69,7 +76,13 @@ function App() {
           <Route path='/dashboard/host/profile' element={<OrganiserDashboard/>}/>
           <Route path='/under-development' element={<UnderDevelopment/>}/>
           <Route path='/dashboard/customer/browse' element={<BrowsePage/>}/>
+          <Route path='/verify-email' element={<VerifyEmailPage/>}/>
+          <Route path='/organiser/verify-email' element={<VerifyEmailPage/>}/>
+          <Route path='/saved-organiser-events' element={<SavedOrganiserPage/>}/>
+          <Route path='/resend-verification-email' element={<ResendVerification/>}/>
           <Route path='/logout' element={<Logout/>}/>
+          <Route path='/delete-account' element={<DeleteAccountButton/>}/>
+          <Route path='/post-card' element={<PostCard/>}/>
         </Route>
       </Routes>
       <ToastContainer position="top-center" autoClose={3000}  />
