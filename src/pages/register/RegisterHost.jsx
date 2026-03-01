@@ -70,10 +70,10 @@ toast.success("Registration successful! Please verify your email before logging 
         animate="visible"
         variants={variants}
         transition={{ duration: 0.5 }}
-        className="max-w-md w-full space-y-8 bg-purple-50/80 p-8 rounded-lg shadow-md"
+        className="max-w-md w-full space-y-8   p-8 rounded-lg shadow-md"
       >
-        <h2 className="text-center text-3xl font-extrabold text-gray-900">
-          Loading...
+        <h2 className="text-center text-8xl  animate-pulse font-extrabold text-gray-900">
+         🥳...
         </h2>
       </motion.div>
     </div>
@@ -96,7 +96,7 @@ return (
           Host Registration
         </h2>
 
-        {/* Basic Info */}
+       
         {[
           { name: "name", label: "Your Name" },
           { name: "businessName", label: "Business Name" },
@@ -120,7 +120,7 @@ return (
 
       
 
-{/* Submit */}
+ 
         <button
           type="submit"
           className="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700 transition"

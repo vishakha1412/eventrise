@@ -44,10 +44,10 @@ export const Logout = () => {
         animate="visible"
         variants={variants}
         transition={{ duration: 0.5 }}
-        className="max-w-md w-full space-y-8 bg-purple-50/80 p-8 rounded-lg shadow-md"
+        className="max-w-md w-full space-y-8   p-8 rounded-lg shadow-md"
       >
-        <h2 className="text-center text-3xl font-extrabold text-gray-900">
-          Loading...
+        <h2 className="text-center text-8xl  animate-pulse font-extrabold text-gray-900">
+         🥳...
         </h2>
       </motion.div>
     </div>

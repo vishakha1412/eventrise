@@ -35,6 +35,8 @@ import ResendVerification from "./components/ResendVerification.jsx";
 import EventCards from "./components/EventCards.jsx";
 import PostCard from "./pages/browse/PostCard.jsx";
  
+import { EventPhotos } from "./pages/dashboard/EventPhotos.jsx";
+ 
 
 
 function App() {
@@ -83,6 +85,7 @@ function App() {
           <Route path='/logout' element={<Logout/>}/>
           <Route path='/delete-account' element={<DeleteAccountButton/>}/>
           <Route path='/post-card' element={<PostCard/>}/>
+          <Route path='/event-cards' element={<EventPhotos/>}/> 
         </Route>
       </Routes>
       <ToastContainer position="top-center" autoClose={3000}  />
